@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Brain, Layout, Cpu, Database, Sparkles, Palette, CheckCircle, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
