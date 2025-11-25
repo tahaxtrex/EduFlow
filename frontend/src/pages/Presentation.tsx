@@ -82,50 +82,134 @@ const slides = [
         )
     },
     {
-        id: 'tech',
-        title: "The Technology",
-        subtitle: "GPT-4o & Meta-Prompting",
+        id: 'process-overview',
+        title: "The Process",
+        subtitle: "5-Stage Generative Pipeline",
         icon: Cpu,
         color: "from-cyan-400 to-blue-400",
         content: (
             <div className="space-y-6">
-                <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 font-mono text-sm text-left">
-                    <p className="text-slate-500 mb-2">// The Secret Sauce</p>
-                    <p className="text-purple-400">const strategy = "Meta-Prompting";</p>
-                    <p className="text-slate-300 mt-2">
-                        We asked the AI to write its own system prompts. By letting the model define the instructions, we reduced misalignment and improved quality.
-                    </p>
+                <p className="text-lg text-slate-300">
+                    We don't just ask for a course. We use a <strong>Multi-Stage Sequential Reasoning Flow</strong> to build it piece by piece.
+                </p>
+                <div className="grid grid-cols-5 gap-2 text-xs text-center">
+                    <div className="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                        <span className="block font-bold text-indigo-400">1. Persona</span>
+                        <span className="text-slate-500">Tone & Level</span>
+                    </div>
+                    <div className="flex items-center justify-center text-slate-600">→</div>
+                    <div className="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                        <span className="block font-bold text-indigo-400">2. Structure</span>
+                        <span className="text-slate-500">Modules & Lessons</span>
+                    </div>
+                    <div className="flex items-center justify-center text-slate-600">→</div>
+                    <div className="p-2 bg-slate-800 rounded-lg border border-slate-700">
+                        <span className="block font-bold text-indigo-400">3. Content</span>
+                        <span className="text-slate-500">Multimodal Lessons</span>
+                    </div>
                 </div>
-                <div className="flex flex-col gap-2 text-left">
-                    <h3 className="font-bold text-white">Pipeline:</h3>
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                        <span className="px-2 py-1 bg-slate-800 rounded">Persona</span> →
-                        <span className="px-2 py-1 bg-slate-800 rounded">Structure</span> →
-                        <span className="px-2 py-1 bg-slate-800 rounded">Content</span> →
-                        <span className="px-2 py-1 bg-slate-800 rounded">Assessment</span>
+                <div className="flex justify-center gap-2 text-xs text-center mt-2">
+                    <div className="p-2 bg-slate-800 rounded-lg border border-slate-700 w-1/4">
+                        <span className="block font-bold text-indigo-400">4. Extras</span>
+                        <span className="text-slate-500">Glossary & Quiz</span>
+                    </div>
+                    <div className="flex items-center justify-center text-slate-600">→</div>
+                    <div className="p-2 bg-slate-800 rounded-lg border border-slate-700 w-1/4">
+                        <span className="block font-bold text-green-400">5. Assembly</span>
+                        <span className="text-slate-500">Final JSON</span>
                     </div>
                 </div>
             </div>
         )
     },
     {
-        id: 'score',
-        title: "Winning Criteria",
-        subtitle: "How we ensured quality",
+        id: 'step-1-2',
+        title: "Steps 1 & 2",
+        subtitle: "Persona & Structure",
+        icon: Brain,
+        color: "from-purple-400 to-pink-400",
+        content: (
+            <div className="grid grid-cols-2 gap-6 text-left">
+                <div className="p-6 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="font-bold text-purple-400 mb-2">1. Persona Generation</h3>
+                    <p className="text-sm text-slate-300 mb-2">
+                        We first ask the AI to analyze the user and create a "Pedagogical Persona".
+                    </p>
+                    <ul className="list-disc list-inside text-xs text-slate-400 space-y-1">
+                        <li>Extracts learner summary</li>
+                        <li>Defines recommended tone</li>
+                        <li>Sets complexity level</li>
+                    </ul>
+                </div>
+                <div className="p-6 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="font-bold text-purple-400 mb-2">2. Structure Generation</h3>
+                    <p className="text-sm text-slate-300 mb-2">
+                        We generate the blueprint <em>before</em> writing any content.
+                    </p>
+                    <ul className="list-disc list-inside text-xs text-slate-400 space-y-1">
+                        <li>Max 3 modules</li>
+                        <li>Max 3 lessons/module</li>
+                        <li>Prevents rambling & inconsistency</li>
+                    </ul>
+                </div>
+            </div>
+        )
+    },
+    {
+        id: 'step-3',
+        title: "Step 3",
+        subtitle: "Lesson Expansion",
+        icon: Database,
+        color: "from-indigo-400 to-cyan-400",
+        content: (
+            <div className="space-y-6">
+                <p className="text-lg text-slate-300">
+                    This is the heavy lifting. We transform titles into full, rich content using <strong>Iterative Deepening</strong>.
+                </p>
+                <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 font-mono text-xs text-left">
+                    <p className="text-slate-500 mb-2">// What we generate for EACH lesson:</p>
+                    <ul className="space-y-2 text-green-400">
+                        <li>+ Explanation (Markdown + LaTeX)</li>
+                        <li>+ 2 Concrete Examples</li>
+                        <li>+ 2 Conceptual Analogies</li>
+                        <li>+ Image Prompts (for generation)</li>
+                        <li>+ Graph Data (for Recharts)</li>
+                        <li>+ Interactive Quiz Items</li>
+                    </ul>
+                </div>
+            </div>
+        )
+    },
+    {
+        id: 'strategies',
+        title: "Technical Strategies",
+        subtitle: "How we ensure quality",
         icon: Sparkles,
         color: "from-amber-400 to-orange-400",
         content: (
-            <div className="grid gap-4 text-left">
+            <div className="grid grid-cols-2 gap-4 text-left">
                 <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
-                    <h3 className="font-bold text-amber-400 mb-1">Consistency</h3>
-                    <p className="text-sm text-slate-300">
-                        Enforced <strong>JSON_Object</strong> outputs for every step. The "Iterative Deepening" pipeline ensures context is passed forward, preventing hallucinations.
+                    <h3 className="font-bold text-amber-400 mb-1">Iterative Deepening</h3>
+                    <p className="text-xs text-slate-300">
+                        Each stage feeds structured data into the next. The "Persona" is injected into every subsequent prompt to prevent context drift.
                     </p>
                 </div>
                 <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
-                    <h3 className="font-bold text-amber-400 mb-1">Adaptivity</h3>
-                    <p className="text-sm text-slate-300">
-                        We generate a unique <strong>Persona JSON</strong> first. This "DNA" is injected into every subsequent prompt to tailor tone and difficulty.
+                    <h3 className="font-bold text-amber-400 mb-1">JSON Enforcement</h3>
+                    <p className="text-xs text-slate-300">
+                        We force <code>response_format: "json_object"</code>. This eliminates hallucinations and ensures the frontend never breaks.
+                    </p>
+                </div>
+                <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="font-bold text-amber-400 mb-1">Pedagogical Constraints</h3>
+                    <p className="text-xs text-slate-300">
+                        Explicit instructions for "scaffolded progression" and "multimodal explanations" (text + visual + interactive).
+                    </p>
+                </div>
+                <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700">
+                    <h3 className="font-bold text-amber-400 mb-1">Meta-Prompting</h3>
+                    <p className="text-xs text-slate-300">
+                        We asked GPT-4o to write its own system prompts first, ensuring maximum alignment with the model's capabilities.
                     </p>
                 </div>
             </div>
