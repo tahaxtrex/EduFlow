@@ -6,6 +6,9 @@ import Questionnaire from './pages/Questionnaire';
 import CourseViewer from './pages/CourseViewer';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
+import SampleCourseViewer from './pages/SampleCourseViewer';
+import AdvancedCourseViewer from './pages/AdvancedCourseViewer';
+import Presentation from './pages/Presentation';
 
 function App() {
     return (
@@ -16,6 +19,9 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/questionnaire" element={<Questionnaire />} />
                 <Route path="/course/:id" element={<CourseViewer />} />
+                <Route path="/sample-course" element={<SampleCourseViewer />} />
+                <Route path="/advanced-course" element={<AdvancedCourseViewer />} />
+                <Route path="/presentation" element={<Presentation />} />
             </Routes>
         </Router>
     );

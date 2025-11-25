@@ -1,0 +1,361 @@
+// @ts-nocheck
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Book, CheckCircle, Menu, ChevronLeft, ChevronRight, PlayCircle, XCircle, HelpCircle, Download, BarChart2, Code, Calculator, GraduationCap } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import { advancedCourse } from '../data/advancedCourse';
+import { useNavigate } from 'react-router-dom';
+
+const AdvancedCourseViewer = () => {
+    const navigate = useNavigate();
+    const [course, setCourse] = useState(advancedCourse);
+    const [activeModule, setActiveModule] = useState(0);
+    const [activeLesson, setActiveLesson] = useState(0);
+    const [quizState, setQuizState] = useState({});
+    const [showFinalAssessment, setShowFinalAssessment] = useState(false);
+    const [finalAssessmentState, setFinalAssessmentState] = useState({});
+    const contentRef = useRef(null);
+
+    useEffect(() => {
+        setQuizState({});
+        setShowFinalAssessment(false);
+    }, [activeModule, activeLesson]);
+
+    const handleDownloadPDF = () => {
+        window.print();
+    };
+
+    const currentModule = course.modules[activeModule];
+    const currentLesson = currentModule?.lessons[activeLesson];
+
+    // Render Graph Helper
+    const renderGraph = (graph) => {
+        if (!graph || !graph.data) return null;
+        const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042'];
+
+        return (
+            <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 my-8 h-80 print:break-inside-avoid">
+                <h4 className="text-center font-bold mb-4 text-slate-300">{graph.title}</h4>
+                <ResponsiveContainer width="100%" height="100%">
+                    {graph.type === 'bar' ? (
+                        <BarChart data={graph.data}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                            <XAxis dataKey="name" stroke="#94a3b8" />
+                            <YAxis stroke="#94a3b8" />
+                            <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }} />
+                            <Bar dataKey="value" fill="#6366f1" />
+                        </BarChart>
+                    ) : graph.type === 'line' ? (
+                        <LineChart data={graph.data}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                            <XAxis dataKey="name" stroke="#94a3b8" />
+                            <YAxis stroke="#94a3b8" />
+                            <Tooltip contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }} />
+                            <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                        </LineChart>
+                    ) : (
+                        <PieChart>
+                            <Pie data={graph.data} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="value" label>
+                                {graph.data.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                        </PieChart>
+                    )}
+                </ResponsiveContainer>
+            </div>
+        );
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-900 text-white flex font-sans print:bg-white print:text-black">
+            {/* Sidebar */}
+            <aside className="w-80 bg-slate-950 border-r border-slate-800 flex flex-col h-screen sticky top-0 overflow-y-auto print:hidden">
+                <div className="p-6 border-b border-slate-800 cursor-pointer" onClick={() => navigate('/')}>
+                    <div className="flex items-center gap-2 mb-2">
+                        <GraduationCap className="w-6 h-6 text-purple-400" />
+                        <h1 className="font-bold text-xl text-purple-400">Advanced Track</h1>
+                    </div>
+                    <h2 className="text-sm font-semibold text-slate-300">{course.title}</h2>
+                    <p className="text-xs text-slate-600 mt-2 hover:text-purple-400 transition">← Back to Home</p>
+                </div>
+
+                <div className="flex-1 py-4">
+                    {course.modules.map((mod, mIdx) => (
+                        <div key={mod.id} className="mb-6">
+                            <div className="px-6 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                Module {mIdx + 1}
+                            </div>
+                            <h3 className="px-6 font-semibold mb-2">{mod.title}</h3>
+                            <div>
+                                {mod.lessons.map((lesson, lIdx) => (
+                                    <button
+                                        key={lesson.id}
+                                        onClick={() => { setActiveModule(mIdx); setActiveLesson(lIdx); setShowFinalAssessment(false); }}
+                                        className={`w-full text-left px-6 py-3 flex items-center gap-3 transition ${activeModule === mIdx && activeLesson === lIdx && !showFinalAssessment
+                                            ? 'bg-purple-500/10 text-purple-400 border-r-2 border-purple-500'
+                                            : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                                            }`}
+                                    >
+                                        {activeModule === mIdx && activeLesson === lIdx && !showFinalAssessment ? (
+                                            <PlayCircle className="w-4 h-4" />
+                                        ) : (
+                                            <div className="w-4 h-4 rounded-full border border-slate-600" />
+                                        )}
+                                        <span className="text-sm truncate">{lesson.title}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+
+                    {/* Final Assessment Link */}
+                    {course.finalAssessment && (
+                        <button
+                            onClick={() => setShowFinalAssessment(true)}
+                            className={`w-full text-left px-6 py-3 flex items-center gap-3 transition mt-4 ${showFinalAssessment
+                                ? 'bg-purple-500/10 text-purple-400 border-r-2 border-purple-500'
+                                : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                                }`}
+                        >
+                            <CheckCircle className="w-4 h-4" />
+                            <span className="font-bold">Final Assessment</span>
+                        </button>
+                    )}
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 h-screen overflow-y-auto bg-slate-900 relative print:h-auto print:overflow-visible print:bg-white">
+                <div className="max-w-4xl mx-auto p-12 print:p-0 print:max-w-none" ref={contentRef}>
+                    {showFinalAssessment ? (
+                        <div className="space-y-8">
+                            <h2 className="text-4xl font-bold mb-6 text-purple-400 print:text-black">Final Assessment</h2>
+                            <p className="text-slate-400 mb-8 print:text-gray-600">Test your theoretical understanding.</p>
+
+                            {course.finalAssessment.map((q, i) => {
+                                const state = finalAssessmentState[i] || {};
+                                const isCorrect = state.selected === q.correct;
+
+                                return (
+                                    <div key={i} className="bg-slate-800/50 p-6 rounded-xl border border-slate-700 print:bg-white print:border-gray-300 print:break-inside-avoid">
+                                        <p className="font-medium mb-4 text-lg print:text-black">{i + 1}. {q.question}</p>
+                                        <div className="space-y-3">
+                                            {q.options.map((opt, oi) => (
+                                                <button
+                                                    key={oi}
+                                                    onClick={() => !state.submitted && setFinalAssessmentState(prev => ({ ...prev, [i]: { selected: oi } }))}
+                                                    className={`w-full text-left p-4 rounded-xl border transition flex justify-between items-center ${state.selected === oi
+                                                        ? 'bg-purple-600/20 border-purple-500 text-white print:border-black print:font-bold'
+                                                        : 'bg-slate-900 border-slate-800 hover:bg-slate-800 text-slate-300 print:bg-white print:text-black print:border-gray-300'
+                                                        } ${state.submitted && oi === q.correct ? 'bg-green-500/20 border-green-500' : ''}
+                                                      ${state.submitted && state.selected === oi && !isCorrect ? 'bg-red-500/20 border-red-500' : ''}
+                                                    `}
+                                                >
+                                                    <span>{opt}</span>
+                                                    {state.submitted && oi === q.correct && <CheckCircle className="w-5 h-5 text-green-500" />}
+                                                    {state.submitted && state.selected === oi && !isCorrect && <XCircle className="w-5 h-5 text-red-500" />}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {!state.submitted && state.selected !== undefined && (
+                                            <button
+                                                onClick={() => setFinalAssessmentState(prev => ({ ...prev, [i]: { ...prev[i], submitted: true } }))}
+                                                className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-medium print:hidden"
+                                            >
+                                                Check Answer
+                                            </button>
+                                        )}
+                                        {state.submitted && (
+                                            <div className={`mt-4 p-4 rounded-lg text-sm ${isCorrect ? 'bg-green-500/10 text-green-300' : 'bg-red-500/10 text-red-300'}`}>
+                                                <p className="font-bold mb-1">{isCorrect ? 'Correct!' : 'Incorrect'}</p>
+                                                <p>{q.explanation}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : currentLesson ? (
+                        <motion.div
+                            key={currentLesson.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <div className="flex justify-between items-start mb-8">
+                                <div>
+                                    <span className="text-purple-400 font-medium mb-2 block print:text-purple-600">
+                                        Module {activeModule + 1} • Lesson {activeLesson + 1}
+                                    </span>
+                                    <h2 className="text-4xl font-bold mb-6 print:text-black">{currentLesson.title}</h2>
+                                </div>
+                                <button
+                                    onClick={handleDownloadPDF}
+                                    className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition border border-slate-700 print:hidden"
+                                >
+                                    <Download className="w-4 h-4" /> PDF
+                                </button>
+                            </div>
+
+                            {/* Content Rendering */}
+                            <div className="prose prose-invert prose-lg max-w-none print:prose-neutral">
+                                {/* Explanation */}
+                                <div className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700/50 mb-8 print:bg-white print:border-none print:p-0">
+                                    <div className="text-slate-300 leading-relaxed print:text-black">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkMath]}
+                                            rehypePlugins={[rehypeKatex]}
+                                            components={{
+                                                code({ node, inline, className, children, ...props }) {
+                                                    const match = /language-(\w+)/.exec(className || '')
+                                                    return !inline && match ? (
+                                                        <div className="rounded-lg overflow-hidden my-6 border border-slate-700 print:border-gray-300">
+                                                            <div className="bg-slate-950 px-4 py-2 text-xs text-slate-500 border-b border-slate-800 flex items-center gap-2 print:bg-gray-100 print:border-gray-300">
+                                                                <Code className="w-3 h-3" /> {match[1]}
+                                                            </div>
+                                                            <SyntaxHighlighter
+                                                                style={atomDark}
+                                                                language={match[1]}
+                                                                PreTag="div"
+                                                                customStyle={{ margin: 0, borderRadius: 0 }}
+                                                                {...props}
+                                                            >
+                                                                {String(children).replace(/\n$/, '')}
+                                                            </SyntaxHighlighter>
+                                                        </div>
+                                                    ) : (
+                                                        <code className={`${className} bg-slate-700 px-1 py-0.5 rounded text-purple-300 print:bg-gray-200 print:text-black`} {...props}>
+                                                            {children}
+                                                        </code>
+                                                    )
+                                                },
+                                                p: ({ node, ...props }) => {
+                                                    return <p className="mb-4" {...props} />
+                                                }
+                                            }}
+                                        >
+                                            {currentLesson.content.explanation}
+                                        </ReactMarkdown>
+                                    </div>
+                                </div>
+
+                                {/* Graphs */}
+                                {currentLesson.content.graphs && currentLesson.content.graphs.map((graph, i) => (
+                                    <div key={i}>{renderGraph(graph)}</div>
+                                ))}
+
+                                {/* Analogies */}
+                                {currentLesson.content.analogies && (
+                                    <div className="bg-purple-900/20 p-6 rounded-xl border border-purple-500/30 mb-8 print:bg-gray-50 print:border-gray-200 print:break-inside-avoid">
+                                        <h3 className="text-lg font-bold text-purple-300 mb-2 flex items-center gap-2 print:text-purple-700">
+                                            <Book className="w-5 h-5" /> Conceptual Analogy
+                                        </h3>
+                                        <ul className="list-disc list-inside text-purple-200 print:text-black">
+                                            {currentLesson.content.analogies.map((a, i) => (
+                                                <li key={i}>
+                                                    {typeof a === 'string' ? a : a.description || a.content || a.text || JSON.stringify(a)}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {/* Examples */}
+                                {currentLesson.content.examples && (
+                                    <div className="mb-8 print:break-inside-avoid">
+                                        <h3 className="text-2xl font-bold mb-4 print:text-black">Theoretical Applications</h3>
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            {currentLesson.content.examples.map((ex, i) => (
+                                                <div key={i} className="bg-slate-800 p-6 rounded-xl border border-slate-700 print:bg-white print:border-gray-300">
+                                                    <p className="text-slate-300 print:text-black">
+                                                        {typeof ex === 'string' ? ex : ex.description || ex.content || ex.text || JSON.stringify(ex)}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Interactive Quiz */}
+                                {currentLesson.content.quiz && (
+                                    <div className="mt-12 p-8 bg-slate-950 rounded-2xl border border-slate-800 print:bg-white print:border-gray-300 print:break-inside-avoid">
+                                        <h3 className="text-xl font-bold mb-6 flex items-center gap-2 print:text-black">
+                                            <HelpCircle className="w-6 h-6 text-purple-500" /> Knowledge Check
+                                        </h3>
+                                        {currentLesson.content.quiz.map((q, i) => {
+                                            const state = quizState[i] || {};
+                                            const isCorrect = state.selected === q.correct;
+
+                                            return (
+                                                <div key={i} className="mb-8 last:mb-0">
+                                                    <p className="font-medium mb-4 text-lg print:text-black">{q.question}</p>
+                                                    <div className="space-y-3">
+                                                        {q.options.map((opt, oi) => (
+                                                            <div
+                                                                key={oi}
+                                                                className={`w-full text-left p-4 rounded-xl border transition flex justify-between items-center ${state.selected === oi
+                                                                    ? 'bg-purple-600/20 border-purple-500 text-white print:border-black print:font-bold'
+                                                                    : 'bg-slate-900 border-slate-800 text-slate-300 print:bg-white print:text-black print:border-gray-300'
+                                                                    }`}
+                                                            >
+                                                                <span>{opt}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Navigation Footer */}
+                            <div className="flex justify-between mt-16 pt-8 border-t border-slate-800 print:hidden">
+                                <button
+                                    disabled={activeModule === 0 && activeLesson === 0}
+                                    onClick={() => {
+                                        if (activeLesson > 0) setActiveLesson(activeLesson - 1);
+                                        else if (activeModule > 0) {
+                                            setActiveModule(activeModule - 1);
+                                            setActiveLesson(course.modules[activeModule - 1].lessons.length - 1);
+                                        }
+                                    }}
+                                    className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                >
+                                    <ChevronLeft className="w-5 h-5" /> Previous
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        if (activeLesson < currentModule.lessons.length - 1) setActiveLesson(activeLesson + 1);
+                                        else if (activeModule < course.modules.length - 1) {
+                                            setActiveModule(activeModule + 1);
+                                            setActiveLesson(0);
+                                        } else {
+                                            setShowFinalAssessment(true);
+                                        }
+                                    }}
+                                    className="flex items-center gap-2 px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold transition"
+                                >
+                                    {activeModule === course.modules.length - 1 && activeLesson === currentModule.lessons.length - 1 ? 'Final Assessment' : 'Next Lesson'} <ChevronRight className="w-5 h-5" />
+                                </button>
+                            </div>
+
+                        </motion.div>
+                    ) : (
+                        <div className="text-center py-20 text-slate-500">Select a lesson to start</div>
+                    )}
+                </div>
+            </main>
+        </div>
+    );
+};
+
+export default AdvancedCourseViewer;

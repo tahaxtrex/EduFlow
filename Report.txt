@@ -1,0 +1,290 @@
+﻿GenAI Course Builder – System Report 
+(PDF/Markdown Submission) 
+
+1. Overview 
+This report documents the logic, prompting strategy, reasoning steps, and evaluation 
+mechanisms used in the AI Course Generation Pipeline. The system uses OpenAI’s 
+chat-completions API to generate complete instructional content, from learner persona modeling 
+to full course modules, lessons, media prompts, assessments, glossary terms, and usage 
+summaries. 
+
+The pipeline is designed to transform a high-level topic + user profile into a structured, 
+pedagogically aligned learning experience. 
+
+ 
+
+2. GenAI Interaction Logic (System 
+Architecture) 
+The pipeline follows a multi-stage sequential reasoning flow: 
+
+Pipeline Stages 
+
+1.​ Persona Generation 
+2.​ Course Structure Generation 
+3.​ Lesson Expansion 
+4.​ Project, Glossary, Final Assessment Generation 
+5.​ Final Assembly + Output 
+
+Each stage feeds structured JSON back into the next stage, creating a controlled and auditable 
+generation process. 
+
+Data Flow Diagram 
+User Responses  → generatePersona → Persona   
+Persona + Topic → generateStructure → Course Structure   
+Persona + Structure → expandCourseContent → Full Lessons   
+
+
+
+Course Title + Persona → generateExtras → Assessments & Glossary   
+Merge All → Final Course Object 
+ 
+
+Models Used 
+
+All generations call: 
+
+model: "gpt-4o" 
+response_format: { type: "json_object" } 
+ 
+
+This ensures: 
+
+●​ deterministic JSON structure 
+●​ predictable parsing 
+●​ reduced hallucinations 
+●​ minimized post-processing errors 
+
+ 
+
+3. Reasoning Steps Used in Pipeline 
+Execution 
+Global System Strategy 
+Here we have chosen to break down the prompting pipeline into 5 different steps that allows us 
+to ensure that we are giving the LLM a reasonable workload, expecting the least amount of 
+hallucinations and most accurate answers possible. 
+
+ 
+
+1.​ Iterative Deepening​
+Each stage produces structured data consumed by the next, preventing drifting or 
+context loss. 
+
+2.​ JSON Output Normalization​
+Every prompt uses response_format: { type: "json_object" } to prevent 
+malformed or incomplete outputs. 
+
+3.​ Persona Conditioning​
+Persona data is included in every stage, ensuring: 
+
+○​ tone consistency 
+○​ level-appropriate content 
+
+
+
+○​ coherent difficulty scaling 
+4.​ Pedagogical Constraints​
+
+The system uses explicit educational principles: 
+○​ scaffolded progression 
+○​ multimodal explanation (examples, analogies, graphs, images) 
+○​ retrieval practice (quizzes) 
+○​ project-based learning 
+
+5.​ Iterative Module/Lesson Looping​
+The system loops over module and lesson arrays to ensure coverage and to allow for 
+parallelization if needed. 
+
+ 
+ 
+
+4. Prompting Strategy and Pipeline Details 
+Below is a breakdown of all 5 core prompt categories, their goals, and design rationale. Write 
+the reason 
+
+ 
+
+4.1 Persona Generation Prompt 
+Function: generatePersona() 
+
+Purpose:​
+Build a compact but pedagogically informative persona object to condition downstream 
+generations. 
+
+Key Elements Extracted: 
+
+●​ learner summary 
+●​ recommended tone 
+●​ complexity level 
+
+Reasoning Strategy: 
+
+●​ Forces the model to think like a “pedagogical analyst.” 
+●​ Encodes user data into instructional constraints that shape every later generation. 
+●​ Reduces drift by explicitly defining tone + complexity early in the pipeline. 
+
+ 
+
+
+
+4.2 Course Structure Prompt 
+Function: generateStructure() 
+
+Purpose:​
+Produce the high-level instructional blueprint (title → modules → lessons). 
+
+Constraints: 
+
+●​ 3 modules max 
+●​ 3 lessons per module 
+●​ Max 7 lessons total 
+●​ JSON structure enforced 
+
+Reasoning Strategy:​
+By forcing structure before content, the system avoids: 
+
+●​ rambling lesson generation 
+●​ inconsistent depth 
+●​ uneven module sizes 
+●​ missing or duplicated lessons 
+●​ Fulfilling the requirements 
+
+Persona JSON is embedded to contextualize difficulty and tone. 
+
+ 
+
+4.3 Lesson Expansion Prompt 
+Function: generateLessonContent() 
+
+Purpose:​
+Transform lesson titles into full instructional content. 
+
+Outputs: 
+
+●​ explanation (Markdown format) 
+●​ examples (2) 
+●​ analogies (2) 
+●​ images (array of image prompts) 
+●​ graphs (structured data for visualization) 
+●​ quiz items (MCQs with explanations) 
+
+Formatting Rules Enforced: 
+
+
+
+●​ Markdown 
+●​ bolding 
+●​ LaTeX for math 
+●​ code blocks 
+●​ tables 
+●​ bullet lists 
+●​ image prompts 
+●​ graph schemas 
+
+Reasoning Strategy:​
+This is the most complex stage the system instructs GPT to generate multimodal-ready content 
+while maintaining consistency with the persona and course-level context. 
+
+ 
+
+4.4 Extras Generation Prompt 
+Function: generateExtras() 
+
+Purpose:​
+Add: 
+
+●​ final project 
+●​ glossary 
+●​ final assessment (5 questions) 
+●​ usage metadata 
+
+Reasoning Strategy:​
+This ensures: 
+
+●​ course consistency 
+●​ final assessment coverage 
+●​ a complete end-to-end learning experience 
+●​ structured, JSON-valid outputs for LMS integration 
+
+ 
+
+4.5 Full Course Assembly 
+Function: generateCourse() 
+
+The controller function orchestrates: 
+
+●​ persona (stage 1) 
+
+
+
+●​ structure (stage 2) 
+●​ expanded lessons (stage 3) 
+●​ extras (stage 4) 
+
+…and merges them into one final JSON course package. 
+
+Error logging provides transparency into pipeline failures.(debugging) 
+
+ 
+
+5. Evaluation & Self-Checking 
+Mechanisms 
+While the current implementation does not include explicit self-checking prompts, the system 
+uses several implicite valuation safeguards: 
+
+1. JSON enforcement 
+
+Prevents: 
+
+●​ hallucinated fields 
+●​ malformed data structures 
+●​ inconsistencies in schema 
+
+2. Persona-first approach 
+
+Reduces: 
+
+●​ tone drift 
+●​ inappropriate difficulty 
+●​ incoherent teaching style 
+
+3. Structured prompt segmentation 
+
+Each prompt handles a single tightly scoped task. 
+
+This avoids: 
+
+●​ mixed-intent responses 
+●​ overlong or unfocused outputs 
+
+4. Error Handling & Logging 
+
+
+
+Console logs track: 
+
+●​ module/lesson progress 
+●​ generation failures 
+●​ unexpected outputs 
+
+5. Clear formatting rules 
+
+Prevents: 
+
+●​ long walls of text 
+●​ inconsistent formatting 
+●​ missing code/math/table blocks 
+
+6. LMS-ready media representation 
+
+Images and graphs are output as structured JSON metadata rather than raw binary. 
+
+ 
+
+6. Conclusion 
+The course generation service  pipeline is a well-structured, pedagogically aligned 
+generative system designed to produce complete, multi-modal course content using a modular 
+multi-stage pipeline. Its use of explicit personas, structured JSON outputs, and strict content 
+formatting ensures high-quality, LMS-ready instructional material. 
+
+This report documents all major components required for submission under the evaluation 
+guidelines.

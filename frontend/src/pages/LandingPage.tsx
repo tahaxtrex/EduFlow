@@ -31,6 +31,24 @@ const LandingPage = () => {
                     >
                         Dashboard
                     </button>
+                    <button
+                        onClick={() => navigate('/sample-course')}
+                        className="px-4 py-2 rounded-full bg-indigo-500 hover:bg-indigo-400 text-white transition shadow-lg shadow-indigo-500/20"
+                    >
+                        Sample Course
+                    </button>
+                    <button
+                        onClick={() => navigate('/advanced-course')}
+                        className="px-4 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white transition shadow-lg shadow-purple-500/20"
+                    >
+                        Advanced Track
+                    </button>
+                    <button
+                        onClick={() => navigate('/presentation')}
+                        className="px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition border border-slate-700"
+                    >
+                        Presentation
+                    </button>
                 </div>
             </nav>
 
