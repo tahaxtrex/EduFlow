@@ -333,10 +333,43 @@ const CourseViewer = () => {
                                                     )
                                                 },
                                                 p: ({ node, ...props }) => {
-                                                    // Check if children contains math (starts with $$)
-                                                    // This is a basic check, remark-math handles most
                                                     return <p className="mb-4" {...props} />
-                                                }
+                                                },
+                                                table: ({ node, ...props }) => (
+                                                    <div className="overflow-x-auto my-8 rounded-lg border border-slate-700">
+                                                        <table className="w-full text-left border-collapse" {...props} />
+                                                    </div>
+                                                ),
+                                                thead: ({ node, ...props }) => (
+                                                    <thead className="bg-slate-900/50 text-indigo-300" {...props} />
+                                                ),
+                                                tbody: ({ node, ...props }) => (
+                                                    <tbody className="divide-y divide-slate-700" {...props} />
+                                                ),
+                                                tr: ({ node, ...props }) => (
+                                                    <tr className="hover:bg-slate-800/30 transition-colors" {...props} />
+                                                ),
+                                                th: ({ node, ...props }) => (
+                                                    <th className="p-4 font-semibold border-b border-slate-700" {...props} />
+                                                ),
+                                                td: ({ node, ...props }) => (
+                                                    <td className="p-4 align-top" {...props} />
+                                                ),
+                                                strong: ({ node, ...props }) => (
+                                                    <strong className="font-bold text-indigo-300" {...props} />
+                                                ),
+                                                ul: ({ node, ...props }) => (
+                                                    <ul className="list-disc list-inside mb-4 space-y-2" {...props} />
+                                                ),
+                                                ol: ({ node, ...props }) => (
+                                                    <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />
+                                                ),
+                                                li: ({ node, ...props }) => (
+                                                    <li className="text-slate-300" {...props} />
+                                                ),
+                                                blockquote: ({ node, ...props }) => (
+                                                    <blockquote className="border-l-4 border-indigo-500 pl-4 py-1 my-4 italic text-slate-400 bg-slate-800/30 rounded-r-lg" {...props} />
+                                                )
                                             }}
                                         >
                                             {currentLesson.content.explanation}
