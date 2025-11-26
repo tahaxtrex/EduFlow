@@ -112,8 +112,8 @@ const LandingPage = () => {
                     className="max-w-xl mx-auto relative group"
                 >
                     <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                    <div className="relative flex items-center bg-slate-800 rounded-xl p-2 shadow-2xl border border-slate-700">
-                        <div className="pl-4 text-slate-400">
+                    <div className="relative flex flex-col md:flex-row items-stretch md:items-center bg-slate-800 rounded-xl p-2 shadow-2xl border border-slate-700 gap-2 md:gap-0">
+                        <div className="pl-4 text-slate-400 hidden md:block">
                             <Sparkles className="w-6 h-6" />
                         </div>
                         <input
@@ -121,11 +121,11 @@ const LandingPage = () => {
                             value={topic}
                             onChange={(e) => setTopic(e.target.value)}
                             placeholder="What do you want to learn? (e.g. Quantum Physics)"
-                            className="flex-1 bg-transparent border-none outline-none text-lg px-4 py-3 text-white placeholder-slate-500"
+                            className="flex-1 bg-transparent border-none outline-none text-lg px-4 py-3 text-white placeholder-slate-500 w-full text-center md:text-left"
                         />
                         <button
                             type="submit"
-                            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2"
+                            className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2 w-full md:w-auto"
                         >
                             Start
                             <ArrowRight className="w-5 h-5" />
