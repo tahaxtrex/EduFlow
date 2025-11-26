@@ -1,6 +1,11 @@
 export const advancedCourse = {
     "title": "Theoretical Foundations of Machine Learning 🎓",
     "description": "A rigorous exploration of statistical learning theory, optimization landscapes, and attention mechanisms for postgraduate research.",
+    "intro": {
+        "title": "Welcome, Researcher",
+        "content": "## The Frontier of Intelligence\n\nYou are about to embark on a rigorous intellectual journey into the mathematical foundations of machine intelligence. This track is designed for those who seek not just to *use* tools, but to *understand* the fundamental theorems that make them possible.\n\nWe will move beyond the 'black box' abstraction and dissect the statistical guarantees of learning, the geometry of high-dimensional optimization landscapes, and the linear algebra governing attention mechanisms.\n\n**Prerequisites:**\n* Multivariate Calculus\n* Linear Algebra\n* Probability Theory\n\nPrepare your mind. The deeper you look, the more fascinating it becomes.",
+        "videoUrl": "https://www.youtube.com/embed/aircAruvnKk"
+    },
     "modules": [
         {
             "id": "adv_mod1",
