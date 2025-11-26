@@ -1,6 +1,11 @@
 export const sampleCourse = {
     "title": "Machine Learning: The Brain in the Machine 🧠",
     "description": "A fun, interactive journey into how computers learn, designed for high schoolers who want to build the future.",
+    "intro": {
+        "title": "Welcome, Explorer! 🚀",
+        "content": "## Your Journey Begins Here\n\nWelcome to the **Sample Track**! This isn't your boring old textbook. We're going to explore the wild world of Artificial Intelligence using **interactive experiments**, **fun analogies**, and **real-world magic**.\n\n### What You'll Discover:\n*   How computers \"see\" the world 👀\n*   How to teach a machine like a puppy 🐶\n*   The secret math behind the magic ✨\n\nNo heavy math required—just bring your curiosity!",
+        "videoUrl": "https://www.youtube.com/embed/f_uwKZIAeM0"
+    },
     "modules": [
         {
             "id": "mod1",
@@ -10,7 +15,7 @@ export const sampleCourse = {
                     "id": "les1",
                     "title": "The Lazy Programmer",
                     "content": {
-                        "explanation": "## Coding vs. Learning\n\nImagine you want to teach a computer to tell the difference between a **cat** and a **dog**. \n\nIn the **Old Way (Traditional Programming)**, you'd have to write thousands of rules: \n* \"If it has pointy ears...\"\n* \"If it has whiskers...\"\n* \"If it barks...\"\n\nBut what about a cat that barks? Or a dog with floppy ears? You'd be writing rules forever! 😫\n\n**Machine Learning (ML)** is the \"lazy\" (smart) way. Instead of writing rules, you just show the computer thousands of pictures of cats and dogs and say, \"Figure it out yourself.\" \n\nThe computer looks at the data, finds its own patterns, and writes its own rules. It's like magic, but it's actually just **math**.",
+                        "explanation": "## Coding vs. Learning\n\nImagine you want to teach a computer to tell the difference between a **cat** and a **dog**. \n\nIn the **Old Way (Traditional Programming)**, you'd have to write thousands of rules: \n* \"If it has pointy ears...\"\n* \"If it has whiskers...\"\n* \"If it barks...\"\n\nBut what about a cat that barks? Or a dog with floppy ears? You'd be writing rules forever! 😫\n\n**Machine Learning (ML)** is the \"lazy\" (smart) way. Instead of writing rules, you just show the computer thousands of pictures of cats and dogs and say, \"Figure it out yourself.\" \n\nThe computer looks at the data, finds its own patterns, and writes its own rules. It's like magic, but it's actually just **math**.\n\n> **Fun Fact:** 🤯 The first computer program was written by Ada Lovelace in 1843, over 100 years before the first electronic computer was built!\n\n### Try This! 🧪\nLook at a chair. How would you describe it to an alien using only rules? \"It has 4 legs\"? (What about a beanbag?) \"It has a back\"? (What about a stool?) It's hard, right? That's why we need ML!",
                         "analogies": [
                             "**The Recipe:** Traditional programming is like following a strict recipe. ML is like tasting a dish and figuring out the recipe yourself.",
                             "**The Dog Trick:** Traditional programming is building a robot dog and programming every joint movement. ML is getting a real dog and giving it treats when it sits."
@@ -48,7 +53,7 @@ export const sampleCourse = {
                     "id": "les2",
                     "title": "How Machines \"See\" 👀",
                     "content": {
-                        "explanation": "## It's All Numbers\n\nComputers don't have eyes. They see the world as a giant grid of **numbers**.\n\nTake a black-and-white photo of a number **8**. To a computer, that's just a grid of pixels. \n* 0 = Black\n* 255 = White\n* Everything in between is gray.\n\nWhen an ML model \"looks\" at a picture, it's actually doing math on these numbers to find **features**—like curves, straight lines, or edges.",
+                        "explanation": "## It's All Numbers\n\nComputers don't have eyes. They see the world as a giant grid of **numbers**.\n\nTake a black-and-white photo of a number **8**. To a computer, that's just a grid of pixels. \n* 0 = Black\n* 255 = White\n* Everything in between is gray.\n\nWhen an ML model \"looks\" at a picture, it's actually doing math on these numbers to find **features**—like curves, straight lines, or edges.\n\n> **Fun Fact:** 📸 The first digital camera was invented in 1975. It weighed 8 pounds and took 23 seconds to record a single black-and-white image!\n\n### Try This! 🧪\nZoom in really close on a photo on your phone. Can you see the tiny colored squares? Those are pixels! Your phone combines millions of them to trick your eye into seeing a smooth image.",
                         "analogies": [
                             "**Paint by Numbers:** Imagine a paint-by-numbers book, but instead of painting, you're just looking at the list of numbers to guess what the picture is.",
                             "**The Matrix:** Like Neo seeing the code behind the reality, ML sees the matrix of pixel values behind the image."

@@ -12,6 +12,45 @@ export const advancedCourse = {
             "title": "Module 1: Statistical Learning Theory",
             "lessons": [
                 {
+                    "id": "adv_les0",
+                    "title": "The Landscape of Intelligence",
+                    "content": {
+                        "explanation": "## Before the Math: The Big Picture\n\nBefore we dive into the rigorous proofs of PAC learning, let's establish a conceptual framework. Machine Learning is fundamentally about **function approximation**.\n\nGiven a set of inputs $X$ (images, text, sensor data) and outputs $Y$ (labels, next words, actions), we seek a function $f: X \\to Y$ that minimizes some error metric.\n\n### The Three Pillars\n1.  **Representation:** How do we map the real world into a mathematical space? (e.g., Vector spaces, Manifolds)\n2.  **Evaluation:** How do we measure success? (e.g., Loss functions, Risk)\n3.  **Optimization:** How do we search the space of functions to find the best one? (e.g., Gradient Descent)\n\nIn this course, we will rigorously define each of these pillars.",
+                        "analogies": [
+                            "**The Cartographer:** A map is a representation of territory. A good map (model) preserves the important relationships (distances, topology) while discarding irrelevant details. We are learning to be master cartographers of high-dimensional data manifolds.",
+                            "**The Sculptor:** Optimization is like sculpting. You start with a block of stone (random weights) and chip away (gradients) everything that doesn't look like the statue (target function)."
+                        ],
+                        "examples": [
+                            "**Spam Classification:** $X$ is the space of all possible emails. $Y$ is $\\{0, 1\\}$. We want a function that separates the 'spam' region from the 'ham' region in this high-dimensional space.",
+                            "**Language Modeling:** $X$ is a sequence of words. $Y$ is the probability distribution over the next word. The 'function' is the grammar and semantic logic of the language."
+                        ],
+                        "graphs": [
+                            {
+                                "type": "pie",
+                                "title": "Course Composition",
+                                "data": [
+                                    { "name": "Theory", "value": 40 },
+                                    { "name": "Math", "value": 40 },
+                                    { "name": "Application", "value": 20 }
+                                ]
+                            }
+                        ],
+                        "quiz": [
+                            {
+                                "question": "What is the core mathematical goal of Machine Learning?",
+                                "options": [
+                                    "To build robots",
+                                    "Function Approximation",
+                                    "To write Python code",
+                                    "To store data"
+                                ],
+                                "correct": 1,
+                                "explanation": "At its heart, ML is about finding a mathematical function that best maps inputs to outputs."
+                            }
+                        ]
+                    }
+                },
+                {
                     "id": "adv_les1",
                     "title": "PAC Learning Framework",
                     "content": {
