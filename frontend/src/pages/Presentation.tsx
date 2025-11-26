@@ -7,7 +7,7 @@ const slides = [
     {
         id: 'intro',
         title: "Project Highlights",
-        subtitle: "CourseFoundry: AI-Native Education",
+        subtitle: "EduFlow: AI-Native Education",
         icon: Brain,
         color: "from-indigo-400 to-cyan-400",
         content: (
@@ -63,7 +63,7 @@ const slides = [
         content: (
             <div className="space-y-6">
                 <p className="text-lg text-slate-300">
-                    We didn't use a template. We built <strong>CourseFoundry</strong> from scratch to blend the best of EdTech.
+                    We didn't use a template. We built <strong>EduFlow</strong> from scratch to blend the best of EdTech.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
@@ -268,7 +268,7 @@ const Presentation = () => {
             <header className="p-6 flex justify-between items-center z-10">
                 <div className="flex items-center gap-2 text-xl font-bold text-slate-400">
                     <Brain className="w-6 h-6" />
-                    <span>CourseFoundry Presentation</span>
+                    <span>EduFlow Presentation</span>
                 </div>
                 <button
                     onClick={() => navigate('/')}

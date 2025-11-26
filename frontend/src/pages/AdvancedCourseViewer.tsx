@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, CheckCircle, Menu, ChevronLeft, ChevronRight, PlayCircle, XCircle, HelpCircle, Download, BarChart2, Code, Calculator, GraduationCap } from 'lucide-react';
+import { Book, CheckCircle, Menu, ChevronLeft, ChevronRight, PlayCircle, XCircle, HelpCircle, Download, BarChart2, Code, Calculator, GraduationCap, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -20,6 +20,7 @@ const AdvancedCourseViewer = () => {
     const [quizState, setQuizState] = useState({});
     const [showFinalAssessment, setShowFinalAssessment] = useState(false);
     const [finalAssessmentState, setFinalAssessmentState] = useState({});
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const contentRef = useRef(null);
 
     useEffect(() => {
@@ -76,8 +77,19 @@ const AdvancedCourseViewer = () => {
 
     return (
         <div className="min-h-screen bg-slate-900 text-white flex font-sans print:bg-white print:text-black">
-            {/* Sidebar */}
-            <aside className="w-80 bg-slate-950 border-r border-slate-800 flex flex-col h-screen sticky top-0 overflow-y-auto print:hidden">
+            {/* Mobile Header */}
+            <div className="md:hidden fixed top-0 left-0 w-full bg-slate-950 border-b border-slate-800 p-4 z-50 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                    <button onClick={() => setMobileMenuOpen(true)} className="text-slate-300">
+                        <Menu className="w-6 h-6" />
+                    </button>
+                    <span className="font-bold text-purple-400 truncate max-w-[200px]">{course.title}</span>
+                </div>
+                <button onClick={() => navigate('/')} className="text-xs text-slate-500">Exit</button>
+            </div>
+
+            {/* Sidebar (Desktop) */}
+            <aside className="hidden md:flex w-80 bg-slate-950 border-r border-slate-800 flex-col h-screen sticky top-0 overflow-y-auto print:hidden">
                 <div className="p-6 border-b border-slate-800 cursor-pointer" onClick={() => navigate('/')}>
                     <div className="flex items-center gap-2 mb-2">
                         <GraduationCap className="w-6 h-6 text-purple-400" />
@@ -86,7 +98,6 @@ const AdvancedCourseViewer = () => {
                     <h2 className="text-sm font-semibold text-slate-300">{course.title}</h2>
                     <p className="text-xs text-slate-600 mt-2 hover:text-purple-400 transition">← Back to Home</p>
                 </div>
-
                 <div className="flex-1 py-4">
                     {course.modules.map((mod, mIdx) => (
                         <div key={mod.id} className="mb-6">
@@ -115,8 +126,6 @@ const AdvancedCourseViewer = () => {
                             </div>
                         </div>
                     ))}
-
-                    {/* Final Assessment Link */}
                     {course.finalAssessment && (
                         <button
                             onClick={() => setShowFinalAssessment(true)}
@@ -132,8 +141,77 @@ const AdvancedCourseViewer = () => {
                 </div>
             </aside>
 
+            {/* Mobile Sidebar Drawer */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="md:hidden fixed top-0 left-0 w-4/5 h-full bg-slate-950 z-50 overflow-y-auto border-r border-slate-800"
+                        >
+                            <div className="p-4 border-b border-slate-800 flex justify-between items-center">
+                                <span className="font-bold text-slate-300">Course Menu</span>
+                                <button onClick={() => setMobileMenuOpen(false)}><X className="w-6 h-6 text-slate-500" /></button>
+                            </div>
+                            <div className="py-4">
+                                {course.modules.map((mod, mIdx) => (
+                                    <div key={mod.id} className="mb-6">
+                                        <div className="px-6 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                            Module {mIdx + 1}
+                                        </div>
+                                        <h3 className="px-6 font-semibold mb-2">{mod.title}</h3>
+                                        <div>
+                                            {mod.lessons.map((lesson, lIdx) => (
+                                                <button
+                                                    key={lesson.id}
+                                                    onClick={() => {
+                                                        setActiveModule(mIdx);
+                                                        setActiveLesson(lIdx);
+                                                        setShowFinalAssessment(false);
+                                                        setMobileMenuOpen(false);
+                                                    }}
+                                                    className={`w-full text-left px-6 py-3 flex items-center gap-3 transition ${activeModule === mIdx && activeLesson === lIdx && !showFinalAssessment
+                                                        ? 'bg-purple-500/10 text-purple-400 border-r-2 border-purple-500'
+                                                        : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                                                        }`}
+                                                >
+                                                    {activeModule === mIdx && activeLesson === lIdx && !showFinalAssessment ? (
+                                                        <PlayCircle className="w-4 h-4" />
+                                                    ) : (
+                                                        <div className="w-4 h-4 rounded-full border border-slate-600" />
+                                                    )}
+                                                    <span className="text-sm truncate">{lesson.title}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                                {course.finalAssessment && (
+                                    <button
+                                        onClick={() => { setShowFinalAssessment(true); setMobileMenuOpen(false); }}
+                                        className={`w-full text-left px-6 py-3 flex items-center gap-3 transition mt-4 ${showFinalAssessment
+                                            ? 'bg-purple-500/10 text-purple-400 border-r-2 border-purple-500'
+                                            : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+                                            }`}
+                                    >
+                                        <CheckCircle className="w-4 h-4" />
+                                        <span className="font-bold">Final Assessment</span>
+                                    </button>
+                                )}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
+
             {/* Main Content */}
-            <main className="flex-1 h-screen overflow-y-auto bg-slate-900 relative print:h-auto print:overflow-visible print:bg-white">
+            <main className="flex-1 h-screen overflow-y-auto bg-slate-900 relative print:h-auto print:overflow-visible print:bg-white pt-16 md:pt-0">
                 <div className="max-w-4xl mx-auto p-12 print:p-0 print:max-w-none" ref={contentRef}>
                     {showFinalAssessment ? (
                         <div className="space-y-8">

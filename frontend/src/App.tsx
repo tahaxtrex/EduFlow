@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import SampleCourseViewer from './pages/SampleCourseViewer';
 import AdvancedCourseViewer from './pages/AdvancedCourseViewer';
 import Presentation from './pages/Presentation';
+import QRCodePage from './pages/QRCodePage';
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/sample-course" element={<SampleCourseViewer />} />
                 <Route path="/advanced-course" element={<AdvancedCourseViewer />} />
                 <Route path="/presentation" element={<Presentation />} />
+                <Route path="/qr" element={<QRCodePage />} />
             </Routes>
         </Router>
     );
